@@ -93,7 +93,7 @@ class Maze:
         return val
     
     def solve_map(self, map, start, goal):
-        """ Solving the map using Best First Search algo, i am not going to use priorityQueue here , maybe later """
+        """ Solving the map using A* algo, i am not going to use priorityQueue here , maybe later """
 
         def neighbor_nodes(node):
 
