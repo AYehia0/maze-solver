@@ -14,6 +14,7 @@ class Maze:
         self.map_height = None
         self.map_width = None
         self.space_in = 1
+        self.show_char = '0'
         self.path = None
 
         
@@ -60,18 +61,21 @@ class Maze:
 
     
     def draw_steps(self, path):
-        # Checking if map is empty
-        for i in path:
+        # Checking if map is not empty
+        if len(path) > 1:
+            for i in path:
 
-            os.system('clear')
+                os.system('clear')
 
-            self.draw_map()
-            time.sleep(.2)
+                self.draw_map()
+                time.sleep(.2)
+                
+                # change the path
+                self.map[i] = self.show_char
             
-            # change the path
-            self.map[i] = 'O'
-        
-        print(f"This took:{len(path)} steps")
+            print(f"This took:{len(path)} steps")
+        else:
+            print('No Path was found :(')
                              
     def draw_map(self):
         """ Draw the map """
@@ -177,7 +181,7 @@ class Maze:
                 if add_to_open(opened , neighbor):
                     opened.append(neighbor)
 
-        return closed
+        return None
 
 
 
