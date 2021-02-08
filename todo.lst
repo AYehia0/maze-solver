@@ -1,7 +1,7 @@
 ToDo:
 
     [X] -print maze 
-    [] -solve maze
+    [X] -solve maze
     [X] -show the maze
     [X] -read the maze and locate the start and end locations
 
