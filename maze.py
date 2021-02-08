@@ -1,4 +1,7 @@
+import time
+import os 
 from node import Node
+
 
 class Maze:
     """ For refering nodes to search """
@@ -54,8 +57,24 @@ class Maze:
 
         # Closing the file
         f.close()
+
+    
+    def draw_steps(self, path):
+        # Checking if map is empty
+        for i in path:
+
+            os.system('clear')
+
+            self.draw_map()
+            time.sleep(.2)
+            
+            # change the path
+            self.map[i] = 'O'
+        
+        print(f"This took:{len(path)} steps")
                              
     def draw_map(self):
+        """ Draw the map """
         for y in range(self.map_height):
             for x in range(self.map_width):
                 print('%%-%ds' % self.space_in % self.draw_tile(self.map, (x, y)), end='')
@@ -67,18 +86,6 @@ class Maze:
 
         val = map.get(pos)
         
-        # Check if path is needed to be print
-        # replacing path if found with Xs
-        if 'path' in kwargs and pos in kwargs['path']:
-            val = 'X'
-        
-        # Check if we should print start point
-        if 'start' in kwargs and pos == kwargs['start']: 
-            val = '@'
-        # Check if we should print the goal point
-        if 'goal' in kwargs and pos == kwargs['goal']: 
-            val = '$'
-        # Return a tile value
         return val
     
     def solve_map(self, map, start, goal):
