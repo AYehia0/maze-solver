@@ -1,3 +1,5 @@
+from node import Node
+
 class Maze:
     """ For refering nodes to search """
 
@@ -78,10 +80,97 @@ class Maze:
             val = '$'
         # Return a tile value
         return val
-
     
+    def solve_map(self, map, start, goal):
+        """ Solving the map using Best First Search algo, i am not going to use priorityQueue here , maybe later """
+
+        def neighbor_nodes(node):
+
+            """ Getting all neighbors to a spacific node  """
+
+            x_pos , y_pos = node.pos
+
+            # all possible operators up, down, right and left to the node
+            return [(x_pos-1, y_pos), (x_pos+1, y_pos), (x_pos, y_pos+1), (x_pos, y_pos-1)]
+
+        
+        def add_to_open(open, neighbor):
+
+            """ Check if a neighbor should be added to open list """
+
+            for node in open:
+                if (neighbor == node and neighbor.f >= node.f):
+                    return False
+
+            return True
+
+        # Creating open & closed list to keep track of visited nodes which path to take
+        opened = []
+        closed = []
+
+        # Creating a starting node and goal node having no parents
+        start_node = Node(start, None)
+        goal_node = Node(goal, None)
+
+        # Inserting the start Node to the Open list
+        opened.append(start_node)
+
+        # Looping until the goal is found (when the open list is empty)
+        while len(opened):
+
+            # Sorting the openlist
+            opened.sort()
+
+            # Getting the first element as the current node 
+            current_node = opened.pop(0)
+
+            # adding the current node to the closed list 
+            closed.append(current_node)
+
+            # Checking if the goal was found
+            if current_node == goal_node:
+                path = []
+
+                # append path from end to start
+                while current_node != start_node:
+                    path.append(current_node.pos)
+                    current_node = current_node.parent
+
+                return path[::-1]
+
+            # getting the neighbors to a node using the position x,y of the node which is stored in the map
+            neighbors = neighbor_nodes(current_node)
+
+            # get all the neighboring nodes 
+            for n in neighbors:
+
+                # getting stored val from the map
+                val = map.get(n)
+
+                # check if the value is not the goal (wall)
+                if val == '#':
+                    continue
+
+                # if the value isn't a wall : means it's a valid path
+                # link it to the current_node it's from 
+                neighbor = Node(n, current_node)
+
+                if neighbor in closed:
+                    continue
+
+                # here the fun part 
+                # using manhattan distance to update the h, f, g
+                # heuristic due to the goal
+                neighbor.h = abs(neighbor.pos[0] - goal_node.pos[0]) + abs(neighbor.pos[1] - goal_node.pos[1])
+                neighbor.g = abs(neighbor.pos[0] - start_node.pos[0]) + abs(neighbor.pos[1] - start_node.pos[1])
+                neighbor.f =  neighbor.h
 
 
-m = Maze('maze_map.txt')
-m.read_map()
-m.draw_map()
+                # check if neighbor in the open list and f value is small
+                if add_to_open(opened , neighbor):
+                    opened.append(neighbor)
+
+        return closed
+
+
+
